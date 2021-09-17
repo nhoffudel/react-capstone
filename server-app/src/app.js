@@ -4,13 +4,13 @@ const mongoose = require('mongoose');
 
 /** Source code imports */
 // Mongoose models
-const GroceryItem = require('./api/models/grocery-item');
+const User = require('./api/v1/models/user');
 
 // Routes
-const routes = require('./api/routes/v1');
+const routes = require('./api/v1/routes/');
 
 // Miscellaneos
-const GROCERY_ITEMS = require('./test/data/grocery-items');
+const USERS = require('./test/data/users');
 
 
 // db config
@@ -33,12 +33,12 @@ mongoose
   .catch(error => console.error(`MongoDB: Error ${error}`));
 
 
-// Create some test data in the database for our app
-GROCERY_ITEMS.forEach(item => {
-  const itemModel = new GroceryItem({ name: item.name, type: item.type });
+// Create some test data in the database for our app  
+USERS.forEach(user => {
+  const userModel = new User({ email: user.email, password: user.password });
   // NOTE: If desired see here for how to make this an upsert to get rid of annoying error messages:
   // https://masteringjs.io/tutorials/mongoose/upsert
-  itemModel
+  userModel
     .save() 
     .catch(error => {
       console.log(`MongoDB: Error on save: `, error.errmsg);

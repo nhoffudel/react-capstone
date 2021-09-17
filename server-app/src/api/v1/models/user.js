@@ -7,16 +7,19 @@ const mongoose = require('mongoose');
  *  https://docs.mongodb.com/manual/core/databases-and-collections/#collections
  */
 
-const groceryItemSchema = new mongoose.Schema({
-  name: {
+const userSchema = new mongoose.Schema({
+  email: {
     type: String,
     // This prevents duplicate documents w/the exact same info from being created for this model.
     unique: true,
     required: true,
   },
-  type: String,
+  password: {
+      type: String,
+      required: true,
+  }
 });
 
-const GroceryItem = mongoose.model('GroceryItem', groceryItemSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports = GroceryItem;
+module.exports = User;

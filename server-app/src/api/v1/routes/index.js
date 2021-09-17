@@ -2,7 +2,7 @@
 const express = require('express');
 
 // Source code imports
-const groceryItemsRoutes = require('./grocery-items.route');
+const userRoutes = require('./user.route');
 
 /**
  * Here we combine all our different routes into one 
@@ -24,6 +24,6 @@ router.use('/docs', express.static('docs'));
 /**
  * Add each new router that you create here
  */
-router.use('/grocery-items', groceryItemsRoutes)
+router.use('/users', userRoutes)
 
 module.exports = router;
