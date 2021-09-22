@@ -35,7 +35,7 @@ mongoose
 
 // Create some test data in the database for our app  
 USERS.forEach(user => {
-  const userModel = new User({ email: user.email, password: user.password });
+  const userModel = new User({ username: user.username, password: user.password });
   // NOTE: If desired see here for how to make this an upsert to get rid of annoying error messages:
   // https://masteringjs.io/tutorials/mongoose/upsert
   userModel

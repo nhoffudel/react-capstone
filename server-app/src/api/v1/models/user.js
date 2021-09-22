@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
  */
 
 const userSchema = new mongoose.Schema({
-  email: {
+  username: {
     type: String,
     // This prevents duplicate documents w/the exact same info from being created for this model.
     unique: true,

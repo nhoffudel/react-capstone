@@ -1,4 +1,6 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
+const { ObjectId } = require('bson');
 
 /** Source code imports */
 // Mongoose models
@@ -16,7 +18,7 @@ const router = express.Router();
    * @apiPermission none
    *
    * @apiSuccess (200) {Object[]} users List of users
-   * @apiSuccess (200) {String}   email       Email address 
+   * @apiSuccess (200) {String}   username       Username 
    * @apiSuccess (200) {String}   password      password
    *
    * @apiError (Bad Request 400)   
@@ -26,45 +28,32 @@ router.get('/', (req, res) => {
     // Calling .find() on a model w/out any arguments gets all documents for that collection : )
     .find()     
     .then(allUsers => {
-      const formattedUsers = allUsers.map(user => ({ email: user.email, password: user.password, id: user.id }));
+      const formattedUsers = allUsers.map(user => ({ username: user.username, password: user.password, id: user.id }));
       res.send(formattedUsers);
     })
     .catch(error => res.send(`Error on ${req.path} - ${error}`));
 })
 
-/***
- * NOTE: If desired you could use async/await instead of promises, which would look like this:
- * See https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
- * and https://blog.risingstack.com/mastering-async-await-in-nodejs/
-  ```
-      app.get('/users', async (req, res) => {
-        const users = await User.find();
-        const formattedUsers = users.map(user => ({ name: user.name, type: user.type }));
-        res.send(formattedUsers);
-      })
-  ```
- */
-
 /**
-   * @api {get} v1/users/:email Get user with email
-   * @apiDescription Returns the user with this email
+   * @api {get} v1/users/username/:username Get user with username
+   * @apiDescription Returns the user with this username
    * @apiVersion 1.0.0
-   * @apiName GetUserEmail
+   * @apiName GetUserUsername
    * @apiGroup User
    * @apiPermission none
    *
    * @apiSuccess (200) {Object} users user
-   * @apiSuccess (200) {String}   email       Email address 
+   * @apiSuccess (200) {String}   username       Username 
    * @apiSuccess (200) {String}   password      password
    *
    * @apiError (Bad Request 400)   
    */
-router.get('/:email', (req, res) => {
-  const email = req.params.email;
-  const formatUsers = users => users.map(user => ({ email: user.email, password: user.pass, id: user.id }));
-  if(email) {
+router.get('/username/:username', (req, res) => {
+  const username = req.params.username;
+  const formatUsers = users => users.map(user => ({ username: user.username, password: user.password, id: user._id }));
+  if(username) {
     User
-      .find({ email: email })
+      .find({ username: username })
       .then(desiredUser => res.send(formatUsers(desiredUser)))
       // Error handling
       .catch(error => res.send(`Error - ${JSON.stringify(error)}`));
@@ -76,7 +65,7 @@ router.get('/:email', (req, res) => {
 })
 
 /**
-   * @api {get} v1/users/:id Get user with id
+   * @api {get} v1/users/id/:id Get user with id
    * @apiDescription Returns the user with this id
    * @apiVersion 1.0.0
    * @apiName GetUserID
@@ -84,33 +73,29 @@ router.get('/:email', (req, res) => {
    * @apiPermission none
    *
    * @apiSuccess (200) {Object} users user
-   * @apiSuccess (200) {String}   email       Email address 
+   * @apiSuccess (200) {String}   username       Username 
    * @apiSuccess (200) {String}   password      password
    *
    * @apiError (Bad Request 400)   
    */
- router.get('/:id', (req, res) => {
-  const id = req.params.id;
-  const formatUsers = users => users.map(user => ({ email: user.email, password: user.pass, id: user.id }));
-  if(id) {
-    User
-      .find({ id: id })
-      .then(desiredUser => res.send(formatUsers(desiredUser)))
-      // Error handling
-      .catch(error => res.send(`Error - ${JSON.stringify(error)}`));
-  }
-
-  else {
-    res.send(`404 user not found'`)
-  }
+router.get('/id/:id', (req, res) => {
+  const id = new ObjectId(req.params.id);
+  User.find({"_id": id})
+    .then(desiredItems => {
+      const formattedItems = desiredItems.map(user => ({username: user.username, password: user.password, id: user._id }));
+      console.log(formattedItems);
+      res.send(formattedItems);
+    })
+    .catch(error => res.send(`Error - ${JSON.stringify(error)}`));
 })
 
 // TODO: Add apidoc documentation
 router.post('/', (req, res) => {
   const body = req.body;
-
+  const saltRounds = 10
+  const passwordHash = bcrypt.hashSync(body.password, saltRounds)
   // create mongoose User model instance. we can then save this to mongodb as a document
-  const newUser = new User({ email: body.email, password: body.password });
+  const newUser = new User({ username: body.username, password: passwordHash });
   
   // save to mongodb
   newUser
@@ -120,29 +105,23 @@ router.post('/', (req, res) => {
     .catch(error => res.send(`ERROR: Undable to create ${JSON.stringify(req.body)} user. Err is ${JSON.stringify(error)}`));
 })
 
-/***
-  // TODO: This is not working yet.
-  app.delete('/users/:type/:name', async( req, res) => {
-    const type = req.params.type;
-    // helper function
-  const formatUsers = users => users.map(user => ({ name: user.name, type: user.type }));
+router.put('/:id', async( req, res) => {
+  const saltRounds = 10
+  const passwordHash = bcrypt.hashSync(req.body.password, saltRounds)
+  const id = ObjectId(req.params.id);
+  User
+    .updateOne({"_id": id}, {password: passwordHash})
+    .then(() => res.send(`${id} content changed`))
+    // Error handling
+    .catch(error => res.send(`ERROR: Unable to change ${id} content. Err is ${JSON.stringify(error)}`));
+}) 
 
-    if(type && type === 'fruit' || type === 'vegetable') {
-      const desiredUsers = await User.find({ type: type })
-      res.send(formatUsers(desiredUsers));
-    }
-
-    res.send(`Invalid route - ${req.path}. Valid routes are 'fruit', 'vegetable'`)
-
-    // TODO .find() is probably a promise, use .catch() to do err handling if we can't find the name
-    const userToDelete = await User.find({name: req.params.name});
-
-    userToDelete
-      .delete()
-      .then(() => res.send(`${req.params.name} deleted`))
-      .catch((err) => res.send(`Error - Unable to delete ${req.params.name}. ${err}`));
-
-  });
-**/
+router.delete('/:id', async( req, res) => {
+  const id = ObjectId(req.params.id);
+  User
+    .findOneAndDelete({ "_id": id })
+    .then(() => res.send(`${id} deleted`))
+    .catch((err) => res.send(`Error - Unable to delete ${id}. ${err}`));
+})
 
 module.exports = router;

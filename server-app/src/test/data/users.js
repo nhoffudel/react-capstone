@@ -1,34 +1,34 @@
 const USERS = [
   {
-    email: 'kiwi@gmail.com',
+    username: 'kiwi@gmail.com',
     password: 'passkiwi',
   },
   {
-    email: 'banana@gmail.com',
+    username: 'banana@gmail.com',
     password: 'bananapass',
   },
   {
-    email: 'apple@apple.com',
+    username: 'apple@apple.com',
     password: 'sjobs',
   },
   {
-    email: 'pear@hotmail.com',
+    username: 'pear@hotmail.com',
     password: 'pearpass',
   },
   {
-    email: 'carrot@hotmail.com',
+    username: 'carrot@hotmail.com',
     password: 'carrotpass',
   },
   {
-    email: 'zuccini@aol.com',
+    username: 'zuccini@aol.com',
     password: 'zuccinipass',
   },
   {
-    email: 'tomato@email.com',
+    username: 'tomato@username.com',
     password: 'tomatopass',
   },
   {
-    email: 'onion@tor.org',
+    username: 'onion@tor.org',
     password: 'onionpass',
   },
 ]

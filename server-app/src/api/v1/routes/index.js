@@ -3,6 +3,7 @@ const express = require('express');
 
 // Source code imports
 const userRoutes = require('./user.route');
+const authRoutes = require('./auth.route');
 
 /**
  * Here we combine all our different routes into one 
@@ -24,6 +25,7 @@ router.use('/docs', express.static('docs'));
 /**
  * Add each new router that you create here
  */
-router.use('/users', userRoutes)
+router.use('/users', userRoutes);
+router.use('/auth', authRoutes);
 
 module.exports = router;
