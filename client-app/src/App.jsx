@@ -4,96 +4,78 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
 
 // Source code imports
-import ItemsList from "./ItemsList";
-import SelectedItems from "./SelectedItems";
-
-// Our raw data. In a real app we might get this via an API call instead of it being hardcoded.
-const TYPE_NAMES = {
-  fruits: "fruit",
-  vegetables: "vegetable",
-};
+import Title from "./Title/Title";
+import Login from "./Login/Login";
+import ChangePassword from "./ChangePassword/ChangePassword";
+import AddEntry from "./AddEntry/AddEntry";
+import Home from "./Home/Home";
+import EntryList from "./EntryList/EntryList";
 
 function App(props) {
-  // create the react component state we'll use to store our data
-  const [items, setItems] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:9999/grocery-items")
-      // handle success
-      .then((response) => {
-        const data = response.data;
-        console.log(data);
-
-        const parsedData = data.map((item) => ({ ...item, checked: false }));
-
-        // set our react state w/data from the server!
-        setItems(parsedData);
-      });
-  }, []);
-
-  const updateItem = (itemName) => {
-    console.log("updateItem for ", itemName);
-    // Go thru all items; change the desired one; return a new array which has our updated item and all the other items.
-    setItems((prevState) => {
-      return prevState.map((item) => {
-        console.log(item);
-
-        // If it's the desired item, flip the value of `item.checked`
-        if (itemName === item.name) {
-          console.log("desired item ", item);
-
-          // This could also be done as `return { ...item, checked: !item.checked }`
-          const newItem = {
-            name: item.name,
-            type: item.type,
-            checked: !item.checked,
-          };
-
-          console.log("updated item ", newItem);
-          return newItem;
-        }
-
-        // If it's not the desired item, return it unchanged
-        return { ...item }; // IMPORTANT: Object destructuring like this creates a **new** object w/the same values
-      });
+    let userInfo = {"currentUsername" : null, "currentUserToken" : null, "currentUserID" : null, "loggedIn" : false};
+    const [userState, setUserState] = useState(userInfo);
+    const [entryState, setEntryState] = useState(axios.get("http://localhost:9999/v1/entry/"));
+    
+    const updateUserState = ((username, token, id) => {
+      userInfo = {"currentUsername" : username, "currentUserToken" : token, "currentUserID" : id,  "loggedIn" : true};
+      setUserState(userInfo);
     });
-  };
+    
+    const createEntry = ((newTitle, newContent) => {
+      let entry = {title : newTitle, content: newContent, username: userState.username, date: new Date()};
+      axios.post("http://localhost:9999/v1/entry/", entry);
+      setEntryState(axios.get("http://localhost:9999/v1/entry/"));
+    });
 
-  console.log("App.state.items is ", items);
-
-  // Data being retrieved from server
-  if (!items.length) {
-    return <div>Loading</div>;
-  } else {
     return (
+      <div className="App">
+      <Title userInfo={userInfo}></Title>
       <Router>
-        <div className="App">
-          <h1>Grocery List App</h1>
-          <div>
-            <Link to="/">Selected Items</Link>
+          {/* <div>
+            <Link to="/">Home</Link>
           </div>
           <div>
-            <Link to="fruit">Fruits</Link>
+            <Link to="/Login">Log in</Link>
           </div>
           <div>
-            <Link to="vegetable">Vegetables</Link>
-          </div>
-        </div>
+            <Link to="/ChangePassword">Change Password</Link>
+          </div> */}
+          <ol class="navbar">
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li> | </li>
+          <li>
+            <Link to="/Login">Log in</Link>
+          </li>
+          <li> | </li>
+          <li>
+            <Link to="/ChangePassword">Change Password</Link>
+          </li>
+          <li> | </li>
+          <li>
+            <Link to="/AddEntry">Add blog post</Link>
+          </li>
+          </ol>
+
         <Switch>
-          <Route path="/fruit">
-            <ItemsList items={items} type="fruit" updateItem={updateItem} />
+          <Route path="/Login">
+            <Login updateUserState={updateUserState}/>
           </Route>
-          <Route path="/vegetable">
-            <ItemsList items={items} type="vegetable" updateItem={updateItem} />
+          <Route path="/ChangePassword">
+            <ChangePassword userState={userState}/>
+          </Route>
+          <Route path="/AddEntry">
+            <AddEntry username={userState.currentUsername} createEntry={createEntry}/>
           </Route>
           <Route path="/">
-            <SelectedItems items={items} />
+            {/* <EntryList entries={entryState}/> */}
+            <Home/>
           </Route>
-        </Switch>
+        </Switch> 
       </Router>
+      </div>
     );
   }
-}
 
 export default App;

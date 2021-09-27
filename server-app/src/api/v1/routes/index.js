@@ -4,6 +4,7 @@ const express = require('express');
 // Source code imports
 const userRoutes = require('./user.route');
 const authRoutes = require('./auth.route');
+const entryRoutes = require('./entry.route');
 
 /**
  * Here we combine all our different routes into one 
@@ -27,5 +28,6 @@ router.use('/docs', express.static('docs'));
  */
 router.use('/users', userRoutes);
 router.use('/auth', authRoutes);
+router.use('/entry', entryRoutes);
 
 module.exports = router;
