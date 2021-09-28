@@ -14,32 +14,35 @@ import EntryList from "./EntryList/EntryList";
 function App(props) {
     let userInfo = {"currentUsername" : null, "currentUserToken" : null, "currentUserID" : null, "loggedIn" : false};
     const [userState, setUserState] = useState(userInfo);
-    const [entryState, setEntryState] = useState(axios.get("http://localhost:9999/v1/entry/"));
+    const [entryState, setEntryState] = useState();
+
+  function getEntries(){
+    axios.get('http://localhost:9999/v1/entry/').then(response => {
+      console.log(response.data);
+      setEntryState(response.data);
+   })}
+
+    useEffect(() => getEntries(), [])
+    console.log("entryState");
+    console.log(entryState);
     
     const updateUserState = ((username, token, id) => {
-      userInfo = {"currentUsername" : username, "currentUserToken" : token, "currentUserID" : id,  "loggedIn" : true};
-      setUserState(userInfo);
+      let newUserInfo = {"currentUsername" : username, "currentUserToken" : token, "currentUserID" : id,  "loggedIn" : true};
+      setUserState(newUserInfo);
     });
     
     const createEntry = ((newTitle, newContent) => {
-      let entry = {title : newTitle, content: newContent, username: userState.username, date: new Date()};
-      axios.post("http://localhost:9999/v1/entry/", entry);
-      setEntryState(axios.get("http://localhost:9999/v1/entry/"));
-    });
+      let entry = {title : newTitle, content: newContent, author: userState.currentUsername, date: new Date(), loggedIn: userState.loggedIn};
+      axios.post("http://localhost:9999/v1/entry/", entry,  {headers: {'Content-Type': 'application/json'}})
+      .then(response => {
+        console.log(response);
+        getEntries();
+    })});
 
     return (
       <div className="App">
-      <Title userInfo={userInfo}></Title>
+      <Title userState={userState}></Title>
       <Router>
-          {/* <div>
-            <Link to="/">Home</Link>
-          </div>
-          <div>
-            <Link to="/Login">Log in</Link>
-          </div>
-          <div>
-            <Link to="/ChangePassword">Change Password</Link>
-          </div> */}
           <ol class="navbar">
           <li>
             <Link to="/">Home</Link>
@@ -57,7 +60,6 @@ function App(props) {
             <Link to="/AddEntry">Add blog post</Link>
           </li>
           </ol>
-
         <Switch>
           <Route path="/Login">
             <Login updateUserState={updateUserState}/>
@@ -69,8 +71,8 @@ function App(props) {
             <AddEntry username={userState.currentUsername} createEntry={createEntry}/>
           </Route>
           <Route path="/">
-            {/* <EntryList entries={entryState}/> */}
-            <Home/>
+            <EntryList entries={entryState}/>
+            {/* <Home/> */}
           </Route>
         </Switch> 
       </Router>

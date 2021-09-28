@@ -1,16 +1,19 @@
 /** npm module imports */
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 /** Source code imports */
 // Mongoose models
 const User = require('./api/v1/models/user');
+const Entry = require('./api/v1/models/entry');
 
 // Routes
 const routes = require('./api/v1/routes/');
 
 // Miscellaneos
 const USERS = require('./test/data/users');
+const ENTRIES = require('./test/data/entries');
 
 
 // db config
@@ -45,6 +48,17 @@ USERS.forEach(user => {
     })
 });
 
+ENTRIES.forEach(entry => {
+  const entryModel = new Entry({ title: entry.title, content: entry.content, author: entry.author, date: entry.date });
+  // NOTE: If desired see here for how to make this an upsert to get rid of annoying error messages:
+  // https://masteringjs.io/tutorials/mongoose/upsert
+  entryModel
+    .save() 
+    .catch(error => {
+      console.log(`MongoDB: Error on save: `, error.errmsg);
+    })
+});
+
 /** 
  * Create and start our express server 
  * **/
@@ -61,6 +75,7 @@ const app = express();
 
 // this allows us to parse HTTP POST request bodies 
 app.use(express.json());
+app.use(cors());
 
 // For development - console each HTTP request to the server
 app.use((req, res, next) => {

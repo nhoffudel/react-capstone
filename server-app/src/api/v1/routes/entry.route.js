@@ -108,6 +108,9 @@ router.get('/id/:id', (req, res) => {
 
 // TODO: Add apidoc documentation
 router.post('/', (req, res) => {
+  const body = req.body;
+  console.log(body);
+  if (body.loggedIn){
   // create mongoose Entry model instance. we can then save this to mongodb as a document
   const newEntry = new Entry({ title: body.title, content: body.content, author: body.author, date: new Date() });
   
@@ -117,8 +120,13 @@ router.post('/', (req, res) => {
     .then(() => res.send(`${JSON.stringify(req.body)} Entry created!`))
     // Error handling
     .catch(error => res.send(`ERROR: Undable to create ${JSON.stringify(req.body)} entry. Err is ${JSON.stringify(error)}`));
-})
-
+  }
+  else{
+    console.log("error not logged in");
+    res.send(`ERROR: not logged in`);
+  }
+});
+    
 router.put('/:id', async( req, res) => {
   Entry
     .updateOne({"_id": id}, {content: req.body.content})

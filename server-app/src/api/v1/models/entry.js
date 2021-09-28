@@ -11,18 +11,19 @@ const entrySchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
+    unique: true
   },
   content: {
       type: String,
-      required: true,
+      required: true
   },
   author: {
     type: String,
-    required: true,
+    required: true
   },
   date: {
-    type: new Date(),
-    required: true,
+    type: Date,
+    default: Date.now
   }
 });
 
