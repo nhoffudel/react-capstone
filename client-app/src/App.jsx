@@ -7,20 +7,21 @@ import axios from "axios";
 import Title from "./Title/Title";
 import Login from "./Login/Login";
 import ChangePassword from "./ChangePassword/ChangePassword";
+import SignUp from "./SignUp/SignUp";
 import AddEntry from "./AddEntry/AddEntry";
-import Home from "./Home/Home";
 import EntryList from "./EntryList/EntryList";
+require('dotenv').config();
 
 function App(props) {
-    let userInfo = {"currentUsername" : null, "currentUserToken" : null, "currentUserID" : null, "loggedIn" : false};
-    const [userState, setUserState] = useState(userInfo);
-    const [entryState, setEntryState] = useState();
+  let userInfo = {"currentUsername" : null, "currentUserToken" : null, "currentUserID" : null, "loggedIn" : false};
+  const [userState, setUserState] = useState(userInfo);
+  const [entryState, setEntryState] = useState();
 
   function getEntries(){
-    axios.get('http://localhost:9999/v1/entry/').then(response => {
+    axios.get("http://localhost:9999/v1/entry/").then(response => {
       console.log(response.data);
       setEntryState(response.data);
-   })}
+   })} 
 
     useEffect(() => getEntries(), [])
     console.log("entryState");
@@ -39,6 +40,51 @@ function App(props) {
         getEntries();
     })});
 
+    if (!entryState){
+      return (
+        <div className="App">
+        <Title userState={userState}></Title>
+        <Router>
+            <ol class="navbar">
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li> | </li>
+            <li>
+              <Link to="/Login">Log in</Link>
+            </li>
+            <li> | </li>
+            <li>
+              {/* <Link to="/ChangePassword">Change Password</Link> */}
+            <Link to="/SignUp">Sign Up</Link>
+            </li>
+            <li> | </li>
+            <li>
+              <Link to="/AddEntry">Add blog post</Link>
+            </li>
+            </ol>
+          <Switch>
+            <Route path="/Login">
+              <Login updateUserState={updateUserState}/>
+            </Route>
+            <Route path="/SignUp">
+              <SignUp/>
+            </Route>
+            {/* <Route path="/ChangePassword">
+              <ChangePassword userState={userState}/>
+            </Route> */}
+            <Route path="/AddEntry">
+              <AddEntry username={userState.currentUsername} createEntry={createEntry}/>
+            </Route>
+            <Route path="/">
+              <h3>Loading blog posts...</h3>
+            </Route>
+          </Switch> 
+        </Router>
+        </div>
+      );
+    }
+
     return (
       <div className="App">
       <Title userState={userState}></Title>
@@ -53,7 +99,8 @@ function App(props) {
           </li>
           <li> | </li>
           <li>
-            <Link to="/ChangePassword">Change Password</Link>
+            {/* <Link to="/ChangePassword">Change Password</Link> */}
+          <Link to="/SignUp">Sign Up</Link>
           </li>
           <li> | </li>
           <li>
@@ -64,18 +111,21 @@ function App(props) {
           <Route path="/Login">
             <Login updateUserState={updateUserState}/>
           </Route>
-          <Route path="/ChangePassword">
-            <ChangePassword userState={userState}/>
+          <Route path="/SignUp">
+            <SignUp/>
           </Route>
+          {/* <Route path="/ChangePassword">
+            <ChangePassword userState={userState}/>
+          </Route> */}
           <Route path="/AddEntry">
             <AddEntry username={userState.currentUsername} createEntry={createEntry}/>
           </Route>
           <Route path="/">
             <EntryList entries={entryState}/>
-            {/* <Home/> */}
           </Route>
         </Switch> 
       </Router>
+      <p id="footer">Front end built in ReactJS. Back end built using Express, NodeJS, and MongoDB/Mongoose.</p>
       </div>
     );
   }

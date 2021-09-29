@@ -2,29 +2,25 @@ import { useRef } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
-function Login(props) {
+function SignUp(props) {
   const usernameRef = useRef(null);
   const passwordRef = useRef(null);
   const history = useHistory();
 
-  const handleLoginClick = () => {
-    //post to /v1/auth/login
+  const handleSignUpClick = () => {
     console.log(usernameRef + passwordRef);
     axios
-      .post("http://localhost:9999/v1/auth/login",
+      .post("http://localhost:9999/v1/users",
             {"username": usernameRef.current.value, "password": passwordRef.current.value},
             {headers: {'Content-Type': 'application/json'}})
       .then((response) => {
-        response=response.data;
-        document.cookie = "username=" + response.userForToken.username + "; id=" + response.userForToken.id + "; token=" + response.token;
-        props.updateUserState(response.userForToken.username, response.token, response.userForToken.id);
         history.push("/");
       });
   }
 
   return (
     <div>
-      <h3>Log in to Not Redd It</h3>
+      <h3>Sign up for Not Redd It</h3>
       <form>
         <div>
         <label>Username</label>
@@ -35,9 +31,9 @@ function Login(props) {
       <input type="password" ref={passwordRef}></input>
       </div>
       </form>
-      <button onClick={handleLoginClick}>Log in</button>
+      <button onClick={handleSignUpClick}>Sign Up</button>
     </div>
   );
 }
 
-export default Login;
+export default SignUp;

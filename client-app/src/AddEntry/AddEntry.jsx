@@ -10,7 +10,13 @@ function AddEntry({ username, createEntry }) {
 
     createEntry(newTitle, newContent);
   }
-
+  if (!username){
+    return (
+      <div>
+        You must be logged in to make a new post.
+      </div>
+    )
+  }
   return (
     <div>
       <p>New blog post by {username}</p>

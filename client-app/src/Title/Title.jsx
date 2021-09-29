@@ -1,3 +1,4 @@
+import "./Title.css";
 import React from "react";
 import Weather from "../Weather/Weather";
 
@@ -7,8 +8,8 @@ class Title extends React.Component{
     if (this.props.userState.loggedIn) str = `Logged in as ${this.props.userState.currentUsername}`;
     return (
     <div> 
-      <h1>Not Redd It</h1>
-      <p>{str}</p>
+      <p id="loggedInMessage">{str}</p>
+      <h1 id="title">Not Redd It</h1>
       <Weather/>
     </div>
     );

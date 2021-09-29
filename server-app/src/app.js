@@ -18,7 +18,8 @@ const ENTRIES = require('./test/data/entries');
 
 // db config
 const DB_NAME = 'capstone';
-const DB_URL = `mongodb://localhost:27017/${DB_NAME}`;
+// const DB_URL = `mongodb://localhost:27017/${DB_NAME}`;
+const DB_URL = `mongodb+srv://admin:adminpassword@cluster0.uszg5.mongodb.net/myFirstDatabase?retryWrites=true`;
 
 /** Connect to our MongoDB database  
  **/
@@ -31,33 +32,33 @@ mongoose.connection.on('error', (error) => `MongoDB: Failed to connected to ${DB
 // We have to do this before we can save any Models to the database or get data from database.
 console.log('MongoDB: Attempting to connect ...');
 mongoose
-  .connect(`mongodb://localhost:27017/${DB_NAME}`)
+  .connect(`${DB_URL}`)
   // handle error messages after successfully connectiong
   .catch(error => console.error(`MongoDB: Error ${error}`));
 
 
 // Create some test data in the database for our app  
-USERS.forEach(user => {
-  const userModel = new User({ username: user.username, password: user.password });
-  // NOTE: If desired see here for how to make this an upsert to get rid of annoying error messages:
-  // https://masteringjs.io/tutorials/mongoose/upsert
-  userModel
-    .save() 
-    .catch(error => {
-      console.log(`MongoDB: Error on save: `, error.errmsg);
-    })
-});
+// USERS.forEach(user => {
+//   const userModel = new User({ username: user.username, password: user.password });
+//   // NOTE: If desired see here for how to make this an upsert to get rid of annoying error messages:
+//   // https://masteringjs.io/tutorials/mongoose/upsert
+//   userModel
+//     .save() 
+//     .catch(error => {
+//       console.log(`MongoDB: Error on save: `, error.errmsg);
+//     })
+// });
 
-ENTRIES.forEach(entry => {
-  const entryModel = new Entry({ title: entry.title, content: entry.content, author: entry.author, date: entry.date });
-  // NOTE: If desired see here for how to make this an upsert to get rid of annoying error messages:
-  // https://masteringjs.io/tutorials/mongoose/upsert
-  entryModel
-    .save() 
-    .catch(error => {
-      console.log(`MongoDB: Error on save: `, error.errmsg);
-    })
-});
+// ENTRIES.forEach(entry => {
+//   const entryModel = new Entry({ title: entry.title, content: entry.content, author: entry.author, date: entry.date });
+//   // NOTE: If desired see here for how to make this an upsert to get rid of annoying error messages:
+//   // https://masteringjs.io/tutorials/mongoose/upsert
+//   entryModel
+//     .save() 
+//     .catch(error => {
+//       console.log(`MongoDB: Error on save: `, error.errmsg);
+//     })
+// });
 
 /** 
  * Create and start our express server 
