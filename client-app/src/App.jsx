@@ -10,6 +10,7 @@ import ChangePassword from "./ChangePassword/ChangePassword";
 import SignUp from "./SignUp/SignUp";
 import AddEntry from "./AddEntry/AddEntry";
 import EntryList from "./EntryList/EntryList";
+import Footer from "./Footer/Footer";
 require('dotenv').config();
 
 function App(props) {
@@ -125,7 +126,7 @@ function App(props) {
           </Route>
         </Switch> 
       </Router>
-      <p id="footer">Front end built in ReactJS. Back end built using Express, NodeJS, and MongoDB/Mongoose.</p>
+      <Footer/>
       </div>
     );
   }

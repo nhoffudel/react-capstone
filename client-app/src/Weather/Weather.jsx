@@ -35,8 +35,8 @@ function Weather (){
     }
     return (
       <div>
-        The weather in {weatherState.location.name}, {weatherState.location.region} is {weatherState.current.temp_f}F and {weatherState.current.condition.text.toLowerCase()} with wind at {weatherState.current.wind_mph}MPH from the {weatherState.current.wind_dir}.
-        It feels like {weatherState.current.feelslike_f}F.
+        <p>The weather in {weatherState.location.name}, {weatherState.location.region} is {weatherState.current.temp_f}F and {weatherState.current.condition.text.toLowerCase()} with wind at {weatherState.current.wind_mph}MPH from the {weatherState.current.wind_dir}.
+        It feels like {weatherState.current.feelslike_f}F.</p>
       </div>
     );
 }

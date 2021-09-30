@@ -27,11 +27,11 @@ function Login(props) {
       <h3>Log in to Not Redd It</h3>
       <form>
         <div>
-        <label>Username</label>
+        <label>Username: </label>
       <input ref={usernameRef}></input>
       </div>
       <div>
-      <label>Password</label>
+      <label>Password: </label>
       <input type="password" ref={passwordRef}></input>
       </div>
       </form>

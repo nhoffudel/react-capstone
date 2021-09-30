@@ -1,13 +1,111 @@
+:root {
+  --transition-time: .5s;
+}
+
 body {
   margin: 0;
   font-family:'Courier New', Courier, monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: black;
-  color: #00FF22;
+  /* color: #00FF22; */
+  color: cyan;
+}
+
+input{
+  border-radius: 10%;
+  border-color: cyan;
+  background-color: black;
+  color: white;
+  margin-bottom: 10px;
+  transition-duration: var(--transition-time);
+}
+
+input:hover{
+  background-color: cyan;
+  color: black;
+}
+
+button{
+  width: 10%;
+  height: 2em;
+  margin-bottom: .5em;
+  border-color: cyan;
+  border-radius: 10%;
+  background-color: black;
+  color:cyan;
+  transition-duration: var(--transition-time)
+}
+
+button:hover{
+  background-color: cyan;
+  color:black;
+}
+
+textarea{
+  border-radius: 2%;
+  border-color: cyan;
+  background-color: black;
+  color: white;
+  margin-bottom: 10px;
+  transition-duration: var(--transition-time);
+}
+
+textarea:hover{
+  background-color: cyan;
+  color: black;
+}
+
+hr{
+  border-style: dashed;
+  border-color: cyan;
+  transition-duration: var(--transition-time);
+}
+
+hr:hover{
+  border-color: black;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'Courier New', Courier, monospace
+}
+
+label{
+  transition-duration: var(--transition-time);
+}
+
+label:hover{
+  color:yellow;
+}
+
+h1{
+  transition-duration: var(--transition-time);
+}
+
+h1:hover{
+  color:red;
+}
+
+h3{
+  transition-duration: var(--transition-time);
+}
+
+h3:hover{
+  color:green;
+}
+
+h4{
+  transition-duration: var(--transition-time);
+}
+
+h4:hover{
+  color:green;
+}
+
+p{
+  transition-duration: var(--transition-time);
+}
+
+p:hover{
+  color:yellow;
 }

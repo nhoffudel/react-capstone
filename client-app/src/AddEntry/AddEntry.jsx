@@ -1,3 +1,4 @@
+import "./AddEntry.css";
 import { useRef } from 'react';
 
 function AddEntry({ username, createEntry }) {
@@ -23,11 +24,13 @@ function AddEntry({ username, createEntry }) {
       <form>
         <div>
       <label>Title: </label>
-      <input ref={titleRef}></input>
+      <div/>
+      <input id="addEntryTitle" ref={titleRef}></input>
       </div>
       <div>
       <label> Content: </label>
-      <input ref={contentRef}></input>
+      <div/>
+      <textarea id="addEntryContent" ref={contentRef}></textarea>
       </div>
       </form>
       <button onClick={handleAddEntryClick}>Add post</button>

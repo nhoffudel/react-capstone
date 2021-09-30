@@ -12,9 +12,10 @@ class Entry extends React.Component {
     let formattedDate = `${month}-${day}-${year}`;
     let time = this.props.date.substr(11,8)
     return (
-      <div>               
+      <div>
+        <hr/>
         <h1>{this.props.title}</h1>
-        <h3>By {this.props.author} on {formattedDate} at {time}</h3>
+        <h4>By <b>{this.props.author}</b> on {formattedDate} at {time}</h4>
         <p id="entry">{this.props.content}</p>
       </div>
     );
