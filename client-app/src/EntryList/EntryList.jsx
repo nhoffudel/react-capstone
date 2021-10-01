@@ -2,6 +2,11 @@ import Entry from '../Entry/Entry';
 
 function EntryList({entries}) {
   console.log(entries);
+  if(!entries){
+    return(
+      <div><p>Loading posts...</p></div>
+    )
+  }
   return (
     <div> 
       {

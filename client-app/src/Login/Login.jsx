@@ -16,9 +16,12 @@ function Login(props) {
             {headers: {'Content-Type': 'application/json'}})
       .then((response) => {
         response=response.data;
-        document.cookie = "username=" + response.userForToken.username + "; id=" + response.userForToken.id + "; token=" + response.token;
-        props.updateUserState(response.userForToken.username, response.token, response.userForToken.id);
+        props.updateUserState(response.userForToken.username, response.token, response.userForToken.id, true);
         history.push("/");
+      })
+      .catch(error => {
+        console.log(error);
+        window.alert("Incorrect username or password");
       });
   }
 

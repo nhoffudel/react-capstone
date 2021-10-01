@@ -28,8 +28,8 @@ function App(props) {
     console.log("entryState");
     console.log(entryState);
     
-    const updateUserState = ((username, token, id) => {
-      let newUserInfo = {"currentUsername" : username, "currentUserToken" : token, "currentUserID" : id,  "loggedIn" : true};
+    const updateUserState = ((username, token, id, loggedIn) => {
+      let newUserInfo = {"currentUsername" : username, "currentUserToken" : token, "currentUserID" : id,  "loggedIn" : loggedIn};
       setUserState(newUserInfo);
     });
     
@@ -41,7 +41,7 @@ function App(props) {
         getEntries();
     })});
 
-    if (!entryState){
+    if (!userState.loggedIn){
       return (
         <div className="App">
         <Title userState={userState}></Title>
@@ -56,12 +56,7 @@ function App(props) {
             </li>
             <li> | </li>
             <li>
-              {/* <Link to="/ChangePassword">Change Password</Link> */}
             <Link to="/SignUp">Sign Up</Link>
-            </li>
-            <li> | </li>
-            <li>
-              <Link to="/AddEntry">Add blog post</Link>
             </li>
             </ol>
           <Switch>
@@ -71,24 +66,19 @@ function App(props) {
             <Route path="/SignUp">
               <SignUp/>
             </Route>
-            {/* <Route path="/ChangePassword">
-              <ChangePassword userState={userState}/>
-            </Route> */}
-            <Route path="/AddEntry">
-              <AddEntry username={userState.currentUsername} createEntry={createEntry}/>
-            </Route>
-            <Route path="/">
-              <h3>Loading blog posts...</h3>
-            </Route>
+          <Route path="/">
+            <EntryList entries={entryState}/>
+          </Route>
           </Switch> 
         </Router>
+      <Footer/>
         </div>
       );
     }
 
     return (
       <div className="App">
-      <Title userState={userState}></Title>
+      <Title userState={userState} updateUserState={updateUserState}></Title>
       <Router>
           <ol class="navbar">
           <li>
@@ -96,12 +86,7 @@ function App(props) {
           </li>
           <li> | </li>
           <li>
-            <Link to="/Login">Log in</Link>
-          </li>
-          <li> | </li>
-          <li>
-            {/* <Link to="/ChangePassword">Change Password</Link> */}
-          <Link to="/SignUp">Sign Up</Link>
+            <Link to="/ChangePassword">Change Password</Link>
           </li>
           <li> | </li>
           <li>
@@ -109,15 +94,9 @@ function App(props) {
           </li>
           </ol>
         <Switch>
-          <Route path="/Login">
-            <Login updateUserState={updateUserState}/>
-          </Route>
-          <Route path="/SignUp">
-            <SignUp/>
-          </Route>
-          {/* <Route path="/ChangePassword">
+          <Route path="/ChangePassword">
             <ChangePassword userState={userState}/>
-          </Route> */}
+          </Route>
           <Route path="/AddEntry">
             <AddEntry username={userState.currentUsername} createEntry={createEntry}/>
           </Route>

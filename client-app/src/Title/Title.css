@@ -4,6 +4,7 @@
     padding: 0;
     padding-bottom: .1em;
     margin-top: -.5em;
+    text-align: center;
 }
 
 #loggedInMessage{

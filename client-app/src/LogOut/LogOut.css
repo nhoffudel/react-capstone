@@ -1,0 +1,13 @@
+#signOutText{
+    text-align: center;
+    float:right;
+    margin-top: -1em;
+    margin-right: 1em;
+    width: fit-content;
+}
+
+#signOutText:hover{
+    color:white;
+    background-color: red;
+    border-color: red;
+}
